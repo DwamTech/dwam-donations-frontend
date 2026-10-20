@@ -1,0 +1,642 @@
+{
+  "results": [
+    {
+      "name": "home",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-home.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "projects",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-projects.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "filtered",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-filtered.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "detail",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-detail.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "payment-return",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-payment-return.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "receipt-request",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-receipt-request.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "donation",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-donation.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "validation",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-validation.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": "guest-amount"
+      }
+    },
+    {
+      "name": "billing",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-billing.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "review-disabled",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-review-disabled.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "recovery-ready",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-recovery-ready.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-authorized",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-recovery-authorized.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "browser-handoff",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-browser-handoff.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1425,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-denied",
+      "width": 1440,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\1440-recovery-denied.png",
+      "metrics": {
+        "width": 1440,
+        "scroll": 1440,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "home",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-home.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "projects",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-projects.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "filtered",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-filtered.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "detail",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-detail.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "payment-return",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-payment-return.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "receipt-request",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-receipt-request.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "donation",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-donation.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "validation",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-validation.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": "guest-amount"
+      }
+    },
+    {
+      "name": "billing",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-billing.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "review-disabled",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-review-disabled.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "recovery-ready",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-recovery-ready.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-authorized",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-recovery-authorized.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "browser-handoff",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-browser-handoff.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 805,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-denied",
+      "width": 820,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\820-recovery-denied.png",
+      "metrics": {
+        "width": 820,
+        "scroll": 820,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "home",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-home.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "projects",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-projects.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "filtered",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-filtered.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "detail",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-detail.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "payment-return",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-payment-return.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "receipt-request",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-receipt-request.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "donation",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-donation.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "validation",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-validation.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": "guest-amount"
+      }
+    },
+    {
+      "name": "billing",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-billing.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "review-disabled",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-review-disabled.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "recovery-ready",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-recovery-ready.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-authorized",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-recovery-authorized.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "browser-handoff",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-browser-handoff.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-denied",
+      "width": 390,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\390-recovery-denied.png",
+      "metrics": {
+        "width": 390,
+        "scroll": 375,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "home",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-home.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "projects",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-projects.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "filtered",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-filtered.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "detail",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-detail.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "payment-return",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-payment-return.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "receipt-request",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-receipt-request.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "donation",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-donation.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "validation",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-validation.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": "guest-amount"
+      }
+    },
+    {
+      "name": "billing",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-billing.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "review-disabled",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-review-disabled.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": "donation-step-heading"
+      }
+    },
+    {
+      "name": "recovery-ready",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-recovery-ready.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-authorized",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-recovery-authorized.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "browser-handoff",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-browser-handoff.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "recovery-denied",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-recovery-denied.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "mobile-menu",
+      "width": 360,
+      "path": "D:\\Code\\Donations\\donations-frontend\\qa\\phase-02f-1\\360-mobile-menu.png",
+      "metrics": {
+        "width": 360,
+        "scroll": 345,
+        "h1": 1,
+        "active": ""
+      }
+    },
+    {
+      "name": "keyboard-tab",
+      "active": "<a href=\"#main\" class=\"skip-link\">تجاوز إلى المحتوى</a>"
+    }
+  ],
+  "exchanges": 8,
+  "downloads": 4,
+  "limitations": [
+    "Synthetic CDP interception is not Laravel authorization or cookie verification",
+    "No screen reader or physical mobile keyboard",
+    "Synthetic PDF is not a real receipt integrity check"
+  ]
+}

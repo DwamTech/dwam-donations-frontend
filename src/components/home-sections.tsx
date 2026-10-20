@@ -1,0 +1,13 @@
+import Link from "next/link";
+export function Hero() {
+  return <section className="hero"><div className="hero-copy"><p className="kicker">للعطاء وجهات كثيرة. اختر أثرك.</p><h1>ساهم في صناعة<br /><em>أثرٍ يدوم.</em></h1><p className="hero-description">وراء كل مشروع حكاية تستحق أن تُروى. اكتشف المشاريع المنشورة، تعرّف إلى أهدافها، واختر القضية الأقرب إلى قلبك.</p><div className="hero-actions"><Link className="primary-button" href="/projects">تصفّح مشاريع التبرع <span aria-hidden="true">←</span></Link><Link className="text-button" href="/#how-it-works">تعرّف إلى رحلة العطاء ↓</Link></div><p className="hero-footnote">أهداف واضحة <span aria-hidden="true">·</span> تقدّم تمويل من المصدر</p></div><div className="hero-art" aria-hidden="true"><div className="sun-disc" /><div className="arch arch-back" /><div className="arch arch-front" /><div className="hero-quote">من قلبٍ يعطي<br />إلى أملٍ ينمو.</div><div className="leaf leaf-one" /><div className="leaf leaf-two" /><span className="art-caption">كل بداية صغيرة، تحمل أثرًا.</span></div></section>;
+}
+export function HowItWorks() {
+  return <section className="how-section" id="how-it-works"><div className="how-intro"><p className="kicker">رحلة العطاء</p><h2>خطوة منك.<br /><em>وبداية لأثر.</em></h2><p>تصفّح المشاريع وراجع المبلغ والبيانات محليًا. الدفع الإلكتروني غير متاح حاليًا.</p></div><ol><li><b>01</b><div><h3>اختر مشروعًا</h3><p>تعرّف إلى هدف المشروع وصافي ما جُمع لتمويله.</p></div></li><li><b>02</b><div><h3>أدخل بياناتك ومبلغ التبرع</h3><p>حدّد المبلغ وأدخل بياناتك وبيانات الفوترة، ثم راجعها قبل أي إرسال.</p></div></li><li><b>03</b><div><h3>تحقّق من إتاحة الدفع</h3><p>مراجعة البيانات لا تُنشئ تبرعًا أو حجزًا. عند إتاحة الدفع، يظل تأكيده مسؤولية النظام.</p></div></li></ol></section>;
+}
+export function Transparency() {
+  return <section className="section transparency" id="transparency"><div><p className="kicker">الوضوح أولًا</p><h2>عطاءٌ على<br /><em>بيّنة.</em></h2></div><div className="transparency-copy"><h3>تعرف إلى الهدف، واقرأ التقدّم.</h3><p>تعرض المشاريع أهداف التمويل وصافي المبالغ المحصّلة كما يقدّمها النظام. المبالغ المحجوزة ليست مبالغ محصّلة، ولا تُضاف إلى نسبة التقدّم.</p><h3>تأكيد يستند إلى عملية دفع متحقَّق منها.</h3><p>لا يكفي الرجوع من صفحة الدفع لإثبات نجاح التبرع. يعتمد النظام تأكيد الدفع الموثّق. يمكنك <Link className="inline-link" href="/receipts/recover">طلب تعليمات استرجاع إيصال</Link>، دون ضمان وجود إيصال أو وصول رسالة بريد.</p></div></section>;
+}
+export function Closing() {
+  return <section className="closing"><p className="kicker">ابدأ بما يلامس قلبك</p><h2>لعلّ أثرًا جميلًا<br /><em>يبدأ من هنا.</em></h2><Link className="primary-button light" href="/projects">اكتشف مشاريع التبرع <span aria-hidden="true">←</span></Link></section>;
+}
