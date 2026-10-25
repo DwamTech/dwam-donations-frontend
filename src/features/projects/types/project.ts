@@ -1,4 +1,5 @@
 export type MinorAmount = number | string;
+export type PublicProjectState = "active" | "funded" | "expired" | "closed" | "upcoming" | "reserved" | "unavailable";
 export type ProjectMedia = {
   id: number; uuid: string; type: "image" | "video"; url: string | null;
   mime_type: string | null; caption: string | null; sort_order: number;
@@ -11,6 +12,8 @@ export type DonationProject = {
   currency: string; target_amount_minor: MinorAmount; collected_amount_minor: MinorAmount;
   remaining_amount_minor: MinorAmount; progress_percent: number;
   financial_status: "collecting" | "fully_reserved" | "goal_reached";
+  public_state: PublicProjectState;
+  accepts_donations: boolean;
   cover_image: ProjectMedia | null; gallery_images: ProjectMedia[]; videos: ProjectMedia[];
   acceptance_starts_at: string | null; acceptance_ends_at: string | null;
 };

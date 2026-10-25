@@ -380,7 +380,8 @@ try {
   html = await (await get("/donate/1")).text(); matches(html, /تعذّر التحقق من المشروع حاليًا/);
   assert.doesNotMatch(html, /<input[^>]*id="guest-amount"/);
   assert.ok(upstreamMethods.every(method => method === "GET"), "No upstream donation, reservation, payment or checkout mutation");
-  assert.ok(requests.every(path => /^\/api\/donation-projects(?:\?|\/\d+$)/.test(path)), "Only existing public project reads reach upstream");
+  assert.ok(requests.every(path => /^\/api\/donation-projects(?:\?|\/\d+$)/.test(path)
+    || /^\/api\/donation-projects\/[1-9]\d*\/updates\?per_page=10&page=[1-9]\d*$/.test(path)), "Only approved public project and published-update reads reach upstream");
   console.log(`PASS (${development ? "development" : "production"}): Phases 02A/02B/02C regressions + verified donation entry, numeric navigation, no form for invalid/missing/unverified projects, missing media, exact summary, noindex, form privacy safeguards, no native personal-data serialization, and GET-only project upstream traffic (no financial mutations).`);
 } finally {
   const stopped = once(child, "exit");

@@ -1,5 +1,10 @@
 import type { ProjectMedia } from "../types/project";
 
+export const publicProjectLabels = {
+  active: "جارٍ جمع التبرعات", funded: "اكتمل التمويل", expired: "انتهت فترة التبرعات",
+  closed: "مغلق للتبرعات", upcoming: "لم تبدأ فترة التبرعات", reserved: "السعة المتاحة محجوزة مؤقتاً", unavailable: "غير متاح للتبرع",
+};
+
 export function projectId(value: string) {
   return /^[1-9]\d{0,18}$/.test(value) && BigInt(value) <= BigInt("9223372036854775807") ? value : null;
 }

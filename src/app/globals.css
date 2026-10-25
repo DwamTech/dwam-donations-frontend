@@ -94,3 +94,7 @@ main:focus{outline:none}.inline-link{text-decoration:underline;text-underline-of
 .project-facts span,.donation-steps li{overflow-wrap:anywhere;min-width:0}
 .primary-button,.outline-button,.header-cta{max-width:100%;white-space:normal;text-align:center}
 @media(max-width:760px){footer nav{flex-wrap:wrap;gap:8px 24px}.mobile-menu nav{gap:4px 24px}}
+/* History discovery uses server-filtered counts and ordinary shareable links. */
+.history-tabs { display: flex; flex-wrap: wrap; gap: .65rem; margin-block-end: 1.5rem; }
+.history-tabs a { border: 1px solid var(--line, #d9ded7); border-radius: 999px; padding: .7rem 1rem; text-decoration: none; }
+.history-tabs a[aria-current="page"] { background: #173d36; color: #fff; border-color: #173d36; }

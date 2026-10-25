@@ -18,6 +18,7 @@ export function ProjectFilters({ query, categoryName }: { query: ProjectQuery; c
           <option value="created_at">الأحدث إنشاءً</option><option value="acceptance_ends_at">الأبعد موعدًا لانتهاء التبرع</option><option value="target_amount_minor">الأعلى هدفًا للتمويل</option>
         </select>
       </div>
+      {query.state && <input type="hidden" name="state" value={query.state} />}
       {query.donation_project_category_id && <input type="hidden" name="donation_project_category_id" value={query.donation_project_category_id} />}
       <button type="submit" className="primary-button">عرض النتائج ←</button>
       {active && <Link className="outline-link" href="/projects">مسح الكل</Link>}

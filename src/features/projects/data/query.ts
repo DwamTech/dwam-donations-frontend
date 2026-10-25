@@ -1,5 +1,6 @@
 export type SearchValues = Record<string, string | string[] | undefined>;
 export type ProjectQuery = {
+  state?: "active" | "funded" | "expired" | "closed" | "upcoming" | "reserved" | "unavailable" | "all";
   page: number;
   country_code?: string;
   donation_project_category_id?: string;
@@ -27,7 +28,9 @@ export function parseProjectQuery(values: SearchValues): ProjectQuery {
   const page = single(values.page);
   const country = single(values.country_code).toUpperCase();
   const sort = single(values.sort);
+  const state = single(values.state);
   return {
+    ...(["funded", "expired", "closed", "upcoming", "reserved", "unavailable", "all"].includes(state) ? { state: state as ProjectQuery["state"] } : {}),
     page: /^\d{1,10}$/.test(page) && Number(page) > 0 && Number(page) <= 2147483647 ? Number(page) : 1,
     country_code: countrySet.has(country) ? country : undefined,
     donation_project_category_id: positiveId(single(values.donation_project_category_id)),
@@ -36,6 +39,7 @@ export function parseProjectQuery(values: SearchValues): ProjectQuery {
 }
 export function projectParams(query: ProjectQuery) {
   const params = new URLSearchParams();
+  if (query.state && query.state !== "active") params.set("state", query.state);
   if (query.country_code) params.set("country_code", query.country_code);
   if (query.donation_project_category_id) params.set("donation_project_category_id", query.donation_project_category_id);
   if (query.sort !== "created_at") params.set("sort", query.sort);

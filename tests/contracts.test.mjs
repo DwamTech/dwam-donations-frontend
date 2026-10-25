@@ -29,6 +29,25 @@ test("real resource shape includes nullable category fields and media", () => {
   const value = fixturePage(); value.data[0].cover_image = { id: 2, uuid: "image", type: "image", url: "/storage/a.jpg", mime_type: null, caption: null, sort_order: 0 };
   assert.equal(parseProjectPage(value).data[0].cover_image.id, 2);
 });
+
+test("Laravel null category relationships render in mixed lists and detail without changing the response", () => {
+  const value = fixturePage();
+  const uncategorized = { ...value.data[0], id: 2, category: null };
+  value.data.push(uncategorized);
+  const parsed = parseProjectPage(value);
+  assert.deepEqual(parsed.data[1].category, { id: null, name: null, slug: null });
+  assert.equal(parsed.data[0].id, value.data[0].id);
+  assert.equal(parsed.data[1].target_amount_minor, uncategorized.target_amount_minor);
+  assert.equal(uncategorized.category, null);
+  assert.deepEqual(parseProjectDetail({ data: uncategorized }).category, { id: null, name: null, slug: null });
+});
+
+test("null category support still rejects missing or malformed categories and unsafe finances", () => {
+  for (const category of [undefined, {}, [], "category", { id: "1", name: null, slug: null }]) {
+    assert.throws(() => parseProjectDetail({ data: { ...fixturePage().data[0], category } }));
+  }
+  assert.throws(() => parseProjectDetail({ data: { ...fixturePage().data[0], category: null, target_amount_minor: Number.MAX_SAFE_INTEGER + 1 } }));
+});
 test("malformed data and imprecise money fail without inventing zero values", () => {
   for (const value of [null, {}, { data: [] }, { ...fixturePage(), meta: { current_page: -1 } }]) assert.throws(() => parseProjectPage(value));
   for (const amount of [1.5, Number.MAX_SAFE_INTEGER + 1, null, "12.3", -1]) {

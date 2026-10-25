@@ -5,7 +5,7 @@ export function fixturePage(page = 1) {
       short_description: null, description: null, country_code: null, beneficiary_count: null,
       category: { id: null, name: null, slug: null }, currency: "EGP", target_amount_minor: 10000,
       collected_amount_minor: 1234, remaining_amount_minor: 8766, progress_percent: 12.34,
-      financial_status: "collecting", cover_image: null, gallery_images: [], videos: [],
+      financial_status: "collecting", public_state: "active", accepts_donations: true, cover_image: null, gallery_images: [], videos: [],
       acceptance_starts_at: null, acceptance_ends_at: null }],
     links: { first: "http://localhost/api/donation-projects?page=1", last: "http://localhost/api/donation-projects?page=2", prev: null, next: "http://localhost/api/donation-projects?page=2" },
     meta: { current_page: page, last_page: 2, per_page: 12, total: 13, from: 1, to: 12, path: "http://localhost/api/donation-projects", links: [] },

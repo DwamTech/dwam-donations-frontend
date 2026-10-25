@@ -1,4 +1,4 @@
-export type CheckoutConfig = Readonly<{ enabled: boolean; gateway: string; hosts: readonly string[] }>;
+export type CheckoutConfig = Readonly<{ enabled: boolean; gateway: string; hosts: readonly string[]; authenticated?: boolean }>;
 export const disabledCheckout: CheckoutConfig = Object.freeze({ enabled: false, gateway: "", hosts: Object.freeze([]) });
 export function checkoutConfig(env: Record<string, string | undefined>): CheckoutConfig {
   const gateway = env.DONATIONS_GATEWAY_CODE ?? "";

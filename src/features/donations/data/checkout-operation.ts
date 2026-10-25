@@ -22,6 +22,7 @@ export function operationSnapshot(project: Project, draft: GuestDraft, billing: 
     payment: Object.freeze({ gateway_code: config.gateway, billing: Object.freeze(payer) }),
     intentKey, paymentKey, amountMinor: donor.amount_minor, currency: project.currency, projectReference: project.reference,
     hosts: Object.freeze([...config.hosts]),
+    authenticated: config.authenticated === true,
   });
 }
 type Snapshot = ReturnType<typeof operationSnapshot>;
@@ -78,17 +79,19 @@ export function createCheckoutOperation(snapshot: Snapshot, dependencies: {
   const request = dependencies.fetch ?? fetch;
   const now = dependencies.now ?? Date.now;
   let state: OperationState = Object.freeze({ status: "ready", stage: "intent" });
-  let busy = false, started = false, reference: string | undefined, reserved = false, paid = false, expires = 0;
+  let busy = false, started = false, reference: string | undefined, donorId: number | undefined, reserved = false, paid = false, expires = 0;
   function update(next: OperationState) { state = Object.freeze(next); dependencies.onState?.(state); }
   async function post(stage: Stage) {
-    const path = stage === "intent" ? "/api/donations" : `/api/donations/${reference}/${stage}`;
+    const path = snapshot.authenticated
+      ? stage === "intent" ? "/api/donor/donations" : `/api/donor/donations/${donorId}/${stage}`
+      : stage === "intent" ? "/api/donations" : `/api/donations/${reference}/${stage}`;
     const headers: Record<string, string> = { Accept: "application/json", "Content-Type": "application/json" };
     if (stage === "intent" || stage === "payment") headers["Idempotency-Key"] = stage === "intent" ? snapshot.intentKey : snapshot.paymentKey;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), dependencies.timeoutMs ?? 15000);
     try {
       const response = await request(path, { method: "POST", credentials: "same-origin", cache: "no-store", redirect: "error", headers,
-        body: JSON.stringify(stage === "intent" ? snapshot.intent : stage === "payment" ? snapshot.payment : {}), signal: controller.signal });
+        body: JSON.stringify(stage === "intent" ? snapshot.authenticated ? { amount: snapshot.intent.amount, donation_project_id: snapshot.intent.donation_project_id, is_public_anonymous: snapshot.intent.is_public_anonymous } : snapshot.intent : stage === "payment" ? snapshot.payment : {}), signal: controller.signal });
       let value: unknown;
       try { value = await response.json(); } catch { throw new RequestFailure(response.status, false); }
       if (!response.ok) throw new RequestFailure(response.status, errorEnvelope(value));
@@ -104,6 +107,10 @@ export function createCheckoutOperation(snapshot: Snapshot, dependencies: {
       if (!reference) {
         update({ status: "working", stage });
         const result = data(await post(stage));
+        if (snapshot.authenticated) {
+          if (typeof result.id !== 'number' || !Number.isSafeInteger(result.id) || result.id < 1) throw new Error('Invalid owned donation locator');
+          donorId = result.id;
+        }
         if (typeof result.reference !== "string" || !/^DON-[A-Z0-9]{1,100}$/.test(result.reference) || minor(result.amount_minor) !== snapshot.amountMinor || result.currency !== snapshot.currency || result.status !== "initiated" || result.reservation_state !== "none" || result.is_general !== false || result.is_public_anonymous !== snapshot.intent.is_public_anonymous) throw new Error("Invalid intent");
         const project = object(result.project);
         if (typeof project.reference !== "string" || typeof project.title !== "string" || (snapshot.projectReference && project.reference !== snapshot.projectReference)) throw new Error("Invalid project");

@@ -3,13 +3,14 @@ import Link from "next/link";
 import { changeProjectFilters, projectHref, type ProjectQuery } from "@/features/projects/data/query";
 import type { DonationProject } from "@/features/projects/types/project";
 import { formatMoney } from "@/lib/formatters/money";
+import { publicProjectLabels } from "@/features/projects/data/presentation";
 
 function countryName(code: string) {
   try { return new Intl.DisplayNames("ar", { type: "region" }).of(code) ?? code; } catch { return code; }
 }
 export function ProjectCard({ project, discoveryQuery }: { project: DonationProject; discoveryQuery?: ProjectQuery }) {
   const percentage = Math.min(100, Math.max(0, project.progress_percent));
-  const status = { collecting: "جارٍ جمع التبرعات", fully_reserved: "التمويل المتبقي محجوز", goal_reached: "اكتمل هدف التمويل" }[project.financial_status];
+  const status = publicProjectLabels[project.public_state];
   return <article className="project-card">
     <div className="project-image">
       <ProjectImage key={project.cover_image?.url} src={project.cover_image?.url ?? null} alt={project.cover_image?.caption || project.title} />
@@ -24,6 +25,7 @@ export function ProjectCard({ project, discoveryQuery }: { project: DonationProj
       <progress max={100} value={percentage} aria-label={`تقدّم تمويل ${project.title}`} />
       {(project.progress_percent > 100 || project.progress_percent < 0) && <p className="data-note">نسبة المصدر خارج النطاق المعتاد؛ عُرضت كما وردت.</p>}
       <div className="funding"><strong><bdi>{formatMoney(project.collected_amount_minor, project.currency)}</bdi></strong><span>من هدف <bdi>{formatMoney(project.target_amount_minor, project.currency)}</bdi></span></div>
+      {project.accepts_donations && <Link className="outline-link" href={`/donate/${project.id}`}>تبرع الآن ←</Link>}
     </div>
   </article>;
 }

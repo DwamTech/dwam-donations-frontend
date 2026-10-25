@@ -17,12 +17,16 @@ export function parseProjectPage(payload: unknown): ProjectPage {
       && typeof link.label === "string" && typeof link.active === "boolean")
     || ![payload.links.first, payload.links.last].every(link => typeof link === "string")
     || ![payload.links.prev, payload.links.next].every(nullableString)) throw new Error("Invalid pagination links");
-  payload.data.forEach(parseProject);
-  return payload as ProjectPage;
+  const data = payload.data.map(parseProject);
+  return { ...payload, data } as ProjectPage;
 }
 
 export function parseProject(value: unknown): DonationProject {
-  const p = value;
+  // Laravel serializes an absent eager-loaded category relationship as null.
+  // Keep the presentation model stable without inventing a category identity.
+  const p = object(value) && value.category === null
+    ? { ...value, category: { id: null, name: null, slug: null } }
+    : value;
   if (!object(p) || !integer(p.id) || ![p.uuid, p.title, p.reference].every(s => typeof s === "string")
       || ![p.short_description, p.description, p.country_code, p.acceptance_starts_at, p.acceptance_ends_at].every(nullableString)
       || !(p.beneficiary_count === null || integer(p.beneficiary_count))
@@ -31,6 +35,8 @@ export function parseProject(value: unknown): DonationProject {
       || ![p.target_amount_minor, p.collected_amount_minor, p.remaining_amount_minor].every(money)
       || typeof p.progress_percent !== "number" || !Number.isFinite(p.progress_percent)
       || !["collecting", "fully_reserved", "goal_reached"].includes(String(p.financial_status))
+      || !["active", "funded", "expired", "closed", "upcoming", "reserved", "unavailable"].includes(String(p.public_state))
+      || typeof p.accepts_donations !== "boolean" || p.accepts_donations !== (p.public_state === "active")
       || !(p.cover_image === null || media(p.cover_image))
       || !Array.isArray(p.gallery_images) || !p.gallery_images.every(media)
       || !Array.isArray(p.videos) || !p.videos.every(media)) throw new Error("Invalid public project");

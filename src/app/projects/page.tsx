@@ -9,9 +9,9 @@ import { canonical, site } from "@/lib/config/site";
 import { needsNormalization, parseProjectQuery, projectHref, type SearchValues } from "@/features/projects/data/query";
 // Primitive keys share one request-local read across metadata and page rendering.
 function listing(query: ReturnType<typeof parseProjectQuery>) {
-  return listingByKey(query.page, query.country_code, query.donation_project_category_id, query.sort);
+  return listingByKey(query.page, query.country_code, query.donation_project_category_id, query.sort, query.state);
 }
-const listingByKey = cache((page: number, country_code: string | undefined, donation_project_category_id: string | undefined, sort: ReturnType<typeof parseProjectQuery>["sort"]) => getDonationProjects(page, 12, { page, country_code, donation_project_category_id, sort }));
+const listingByKey = cache((page: number, country_code: string | undefined, donation_project_category_id: string | undefined, sort: ReturnType<typeof parseProjectQuery>["sort"], state: ReturnType<typeof parseProjectQuery>["state"]) => getDonationProjects(page, 12, { page, country_code, donation_project_category_id, sort, state }));
 type Props = { searchParams: Promise<SearchValues> };
 export async function generateMetadata({ searchParams }: Props) {
   const query = parseProjectQuery(await searchParams);
@@ -33,6 +33,9 @@ export default async function ProjectsPage({ searchParams }: Props) {
   const href = projectHref(query);
   return <><section className="projects-hero"><p className="kicker">اختر وجهة عطائك</p><h1>لكل مشروع حكاية.<br /><em>ولعطائك مكان.</em></h1><p>تصفّح المشاريع المنشورة، أو اختر الدولة والترتيب المناسب لك.</p></section>
     <section className="section all-projects" aria-label="اكتشاف المشاريع">
+      <nav className="history-tabs" aria-label="حالة جمع التبرعات">
+        {([["active", "المشاريع النشطة"], ["funded", "المشاريع المكتملة تمويلياً"], ["expired", "المشاريع المنتهية"], ["closed", "مغلق للتبرعات"], ["reserved", "السعة المحجوزة"], ["upcoming", "قريباً"]] as const).map(([state, label]) => <Link key={state} aria-current={(query.state ?? "active") === state ? "page" : undefined} href={projectHref({ ...query, state, page: 1 })}>{label}</Link>)}
+      </nav>
       <ProjectFilters query={query} categoryName={category} />
       {!page ? <ProjectUnavailable retryHref={href} /> : <>
         <div className="list-meta" role="status" aria-live="polite"><span>{page.meta.total.toLocaleString("ar-EG")} {filtered ? "مشروعًا يطابق اختيارك" : "مشروعًا منشورًا"}</span><span>{page.data.length > 0 && page.meta.from !== null && page.meta.to !== null ? `عرض ${page.meta.from.toLocaleString("ar-EG")}–${page.meta.to.toLocaleString("ar-EG")} · ` : ""}الصفحة {page.meta.current_page.toLocaleString("ar-EG")}</span></div>

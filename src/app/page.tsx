@@ -14,6 +14,6 @@ async function LatestProjects() {
 }
 export default function HomePage() {
   return <><Hero /><section className="impact-strip" aria-label="وضوح المشروع"><div><strong>هدف واضح</strong><span>تعرف إلى غاية كل مشروع</span></div><div><strong>تقدّم معلن</strong><span>صافي التمويل كما يورده النظام</span></div><div><strong>اختيارك له معنى</strong><span>ابدأ بالقضية الأقرب إليك</span></div></section>
-    <section className="section featured"><div className="section-heading"><div><p className="kicker">من المشاريع المنشورة</p><h2>فرص للعطاء،<br /><em>ومساحة للأمل.</em></h2><p className="section-description">أحدث المشاريع المنشورة، بحسب تاريخ إنشائها.</p></div><Link href="/projects" className="outline-link">كل المشاريع ←</Link></div><Suspense fallback={<ProjectsLoading />}><LatestProjects /></Suspense></section>
+    <section className="section featured"><div className="section-heading"><div><p className="kicker">المشاريع النشطة</p><h2>فرص للعطاء،<br /><em>ومساحة للأمل.</em></h2><p className="section-description">حملات متاحة للتبرع، بحسب تحقق الخادم من الفترة والسعة المتبقية.</p></div><Link href="/projects" className="outline-link">كل المشاريع ←</Link></div><Suspense fallback={<ProjectsLoading />}><LatestProjects /></Suspense></section>
     <HowItWorks /><Transparency /><Closing /></>;
 }
