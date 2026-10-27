@@ -55,7 +55,8 @@ export async function donationBridge(request: Request, dependencies: { env?: Rec
     for (const cookie of response.headers.getSetCookie()) {
       const name = cookie.slice(0, cookie.indexOf("="));
       if (!cookieName.test(name) || /;\s*domain=/i.test(cookie) || !/;\s*httponly(?:;|$)/i.test(cookie)) continue;
-      outgoing.append("Set-Cookie", cookie);
+      // The browser uses the configured site origin, even when Laravel is an HTTP loopback hop.
+      outgoing.append("Set-Cookie", origin.protocol === "https:" && !/;\s*secure(?:;|$)/i.test(cookie) ? `${cookie}; Secure` : cookie);
     }
     return new Response(bytes, { status: response.status, headers: outgoing });
   } catch { return failure(503); }

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { site } from "@/lib/config/site";
+import { AccountMenu } from "@/features/donors/account-menu";
 
-const Navigation = () => <><Link href="/">الرئيسية</Link><Link href="/projects">المشاريع</Link><Link href="/account">حساب المتبرع</Link><Link href="/#how-it-works">كيف نعمل</Link><Link href="/#transparency">الشفافية</Link></>;
+const Navigation = () => <><Link href="/">الرئيسية</Link><Link href="/projects">المشاريع</Link><AccountMenu /><Link href="/#how-it-works">كيف نعمل</Link><Link href="/#transparency">الشفافية</Link></>;
 
 export function SiteHeader() {
   return <header className="site-header">

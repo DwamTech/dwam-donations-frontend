@@ -11,8 +11,8 @@ import { currencyPrecision } from "@/lib/formatters/money";
 const subscribe = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
-export function GuestDonationForm({ project, checkout = disabledCheckout }: { project: { id: number; title: string; currency: string; reference?: string }; checkout?: CheckoutConfig }) {
-  const [state, dispatch] = useReducer(billingFlowReducer, initialBillingFlow);
+export function GuestDonationForm({ project, checkout = disabledCheckout, initialContact }: { project: { id: number; title: string; currency: string; reference?: string }; checkout?: CheckoutConfig; initialContact?: { name: string; email: string } }) {
+  const [state, dispatch] = useReducer(billingFlowReducer, { ...initialBillingFlow, guest: { ...initialBillingFlow.guest, draft: { ...initialBillingFlow.guest.draft, ...(initialContact ? { name: initialContact.name, email: initialContact.email } : {}) } } });
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady);
   const form = useRef<HTMLFormElement>(null);
   const stepHeading = useRef<HTMLHeadingElement>(null);
@@ -57,8 +57,8 @@ export function GuestDonationForm({ project, checkout = disabledCheckout }: { pr
       ? <CheckoutReview project={project} guest={guest.review} billing={state.billingReview} config={checkout} onEdit={edit} />
       : <><p className="detail-note">الحقول المعلّمة بنجمة مطلوبة. لا تحفظ هذه الصفحة بياناتك؛ إعادة تحميلها تبدأ مراجعة جديدة.</p>
         {/* No native data serialization or network submission, including before hydration. */}
-        <form key={state.step} method="dialog" noValidate onSubmit={advance} ref={form} aria-label={state.step === "entry" ? "مبلغ المساهمة وبيانات الزائر" : "بيانات الفوترة"}>
-          <fieldset disabled={!ready}><legend className="sr-only">{state.step === "entry" ? "المبلغ وبيانات الزائر" : "بيانات الفوترة"}</legend>
+        <form key={state.step} method="dialog" noValidate onSubmit={advance} ref={form} aria-label={state.step === "entry" ? checkout.authenticated ? "مبلغ المساهمة وبيانات التواصل" : "مبلغ المساهمة وبيانات الزائر" : "بيانات الفوترة"}>
+          <fieldset disabled={!ready}><legend className="sr-only">{state.step === "entry" ? "المبلغ وبيانات التواصل" : "بيانات الفوترة"}</legend>
             {state.step === "entry" ? <>
               <div className="donation-field amount-field"><label htmlFor="guest-amount">مبلغ المساهمة المقترح <span aria-hidden="true">*</span></label><div className="amount-input"><input id="guest-amount" type="text" inputMode="decimal" dir="ltr" autoComplete="off" required maxLength={64} value={guest.draft.amount} onChange={event => dispatch({ type: "guest", action: { type: "field", field: "amount", value: event.target.value } })} aria-invalid={!!guest.errors.amount} aria-describedby={`amount-help${guest.errors.amount ? " guest-amount-error" : ""}`} /><span>{project.currency}</span></div>
                 <p className="field-help" id="amount-help">أرقام عربية أو لاتينية، دون فواصل آلاف. {currencyPrecision(project.currency) ? "استخدم النقطة أو الفاصلة العشرية العربية ٫ للكسور، مثل ١٫٥ أو 1.5." : "هذه العملة تستخدم أعدادًا صحيحة دون كسور."}</p>{guest.errors.amount && <p className="field-error" id="guest-amount-error">{guest.errors.amount}</p>}</div>

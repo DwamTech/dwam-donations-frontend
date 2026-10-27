@@ -1,82 +1,51 @@
 "use client";
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import Link from 'next/link';
-import { formatMoney } from '@/lib/formatters/money';
+import { useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useDonorSession } from "./session";
+import { accountReturnPath } from "./session-state";
+import { AccountDashboard, type AccountView } from "./account-dashboard";
 
-type Contribution = { id: number; reference: string; amount_minor: number; amount_minor_exact: string; currency: string; status: string; payment_status: string | null; refunded_amount_minor: string; receipts: { uuid: string; number: string; generation_status: string }[]; project: { title: string } | null };
-const statusLabels: Record<string, string> = { initiated: 'طلب قيد المتابعة', confirmed: 'تبرع مؤكد', cancelled: 'طلب ملغى', paid: 'دفع مستلم', pending: 'دفع منتظر', processing: 'دفع قيد المعالجة', failed: 'دفع غير مكتمل', partially_refunded: 'استرداد جزئي', refunded: 'مسترد بالكامل' };
-export function DonorPortal() {
-  const [profile, setProfile] = useState<{ name: string; email: string } | null>(null);
-  const [rows, setRows] = useState<Contribution[]>([]);
-  const [pagination, setPagination] = useState({ current: 1, last: 1 });
-  const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false);
-  const load = useCallback(async (page = 1) => {
-    try {
-      const r = await fetch('/api/donor/profile', { cache: 'no-store', credentials: 'same-origin' });
-      if (r.status === 401) { setProfile(null); setRows([]); return; }
-      if (!r.ok) throw Error();
-      const p = await r.json();
-      if (typeof p.data?.name !== 'string' || typeof p.data?.email !== 'string') throw Error();
-      setProfile(p.data);
-      const history = await fetch('/api/donor/contributions'+(page > 1 ? '?page='+page : ''), { cache: 'no-store', credentials: 'same-origin' });
-      if (!history.ok) throw Error(); const data = await history.json();
-      if (!Array.isArray(data.data)) throw Error();
-      setRows(data.data); setPagination({ current: data.meta.current_page, last: data.meta.last_page }); setMessage('');
-    } catch { setMessage('تعذر تحديث بيانات الحساب. يرجى المحاولة لاحقًا.'); }
-  }, []);
-  useEffect(() => { const task = setTimeout(() => void load(), 0); return () => clearTimeout(task); }, [load]);
+export function DonorPortal({ view = "overview", returnTo = "/account" }: { view?: AccountView; returnTo?: string }) {
+  const { session, refresh, signedIn } = useDonorSession();
+  const router = useRouter();
+  const [message, setMessage] = useState(""); const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [creatingAccount, setCreatingAccount] = useState(false);
+  const submitting = useRef(false);
   async function login(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return; setBusy(true);
+    event.preventDefault(); if (submitting.current) return;
     const form = event.currentTarget; const input = new FormData(form);
+    if (creatingAccount && input.get("password") !== input.get("password_confirmation")) { setMessage("كلمتا المرور غير متطابقتين."); return; }
+    submitting.current = true; setBusy(true); setMessage("");
     try {
-      const r = await fetch('/api/donor/session', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: input.get('email'), password: input.get('password') }) });
-      if (!r.ok) { setMessage('تعذر تسجيل الدخول. تحقق من بيانات حساب المتبرع وحاول لاحقًا.'); return; }
-      form.reset(); await load();
-    } catch { setMessage('تعذرت خدمة الحسابات حاليًا.'); } finally { setBusy(false); }
+      const body = { email: input.get("email"), password: input.get("password"), ...(creatingAccount ? { name: input.get("name"), password_confirmation: input.get("password_confirmation") } : {}) };
+      const r = await fetch(creatingAccount ? "/api/donor/registration" : "/api/donor/session", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!r.ok) { setMessage(r.status === 401 ? "بيانات الدخول غير صحيحة أو الحساب غير مؤهل لحساب متبرع. راجع بياناتك." : "تعذرت خدمة الحسابات. راجع بياناتك وأعد المحاولة."); return; }
+      const result = await r.json();
+      if (!Number.isSafeInteger(result.data?.id) || typeof result.data.name !== "string" || typeof result.data.email !== "string") throw new Error();
+      signedIn(result.data); form.reset(); setCreatingAccount(false); setShowPassword(false);
+      const verified = await refresh();
+      if (verified.status === "authenticated" && accountReturnPath(returnTo) !== "/account") router.replace(accountReturnPath(returnTo));
+    } catch { setMessage("لم نتمكن من تأكيد الجلسة. أعد تسجيل الدخول قبل المتابعة."); }
+    finally { submitting.current = false; setBusy(false); }
   }
-  async function logout() {
-    if (busy) return; setBusy(true);
-    try { const r = await fetch('/api/donor/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); if (!r.ok) throw Error(); setProfile(null); setRows([]); }
-    catch { setMessage('تعذر إنهاء الجلسة. حاول مرة أخرى.'); } finally { setBusy(false); }
-  }
-  return <section className="section" dir="rtl"><h1>حساب المتبرع وتبرعاتي</h1>
-    <p role="status">{message}</p>
-    {!profile ? <form onSubmit={login}><p>سجّل الدخول بحسابك الحالي. يمكنك التبرع كضيف دون إنشاء حساب.</p>
-      <p><label>البريد الإلكتروني <input name="email" type="email" required autoComplete="username" maxLength={255} /></label></p>
-      <p><label>كلمة المرور <input name="password" type="password" required autoComplete="current-password" maxLength={1024} /></label></p>
-      <button className="primary-button" disabled={busy}>تسجيل الدخول</button>
-    </form> : <><p>{profile.name} — {profile.email}</p><button type="button" className="outline-button" disabled={busy} onClick={logout}>تسجيل الخروج</button> <button type="button" className="outline-button" onClick={() => void load()}>تحديث السجل</button>
-      <p>الحساب يعرض تبرعاته المملوكة فقط. التبرعات السابقة كضيف تبقى مستقلة وتسترجع إيصالاتها بالبريد.</p>
-      {rows.length === 0 && <p>لا توجد تبرعات مسجلة في هذا الحساب.</p>}
-      {rows.map(d => <article key={d.id} className="donation-project-summary"><h2>{d.project?.title ?? 'تبرع عام'}</h2><p>المرجع: <bdi>{d.reference}</bdi></p><Link href={`/account/contributions/${d.id}`}>تفاصيل التبرع</Link><p>{formatMoney(d.amount_minor_exact, d.currency)}</p><p>{statusLabels[d.status] ?? d.status} — {d.payment_status ? statusLabels[d.payment_status] ?? d.payment_status : 'لم يبدأ الدفع'}</p>
-        <p>المسترد: {formatMoney(d.refunded_amount_minor, d.currency)}</p>
-        {d.receipts.map(r => <p key={r.uuid}>الإيصال {r.number}: {r.generation_status === 'ready' ? <a href={`/api/donor/receipts/${encodeURIComponent(r.uuid)}`}>تنزيل الإيصال الأصلي</a> : 'قيد التجهيز'}</p>)}
-      </article>)}
-      <nav aria-label="صفحات تبرعاتي">
-        {pagination.current > 1 && <button type="button" onClick={() => void load(pagination.current-1)}>السابق</button>}
-        {pagination.current < pagination.last && pagination.current < 9999 && <button type="button" onClick={() => void load(pagination.current+1)}>التالي</button>}
-      </nav>
+  return <section className="section donor-account" dir="rtl"><header className="donor-account-heading"><p className="kicker">كل عطاء، وله حكاية</p><h1>{view === "contributions" ? "تبرعاتي" : view === "receipts" ? "إيصالاتي" : "حسابي"}</h1><p>تابع تبرعاتك وإيصالاتك من مكان واحد.</p></header>
+    {session.status === "loading" ? <p role="status">جارٍ التحقق من حسابك…</p> : session.status === "authenticated" ? <AccountDashboard key={session.profile.id} view={view} /> : <>
+      {session.status === "expired" && <p role="alert" className="donor-login-error">انتهت جلسة حسابك. سجّل الدخول للمتابعة؛ لن يتحول تبرعك إلى تبرع ضيف.</p>}
+      {session.status === "unavailable" && <div className="notice" role="alert"><p>تعذر التحقق من الحساب حاليًا.</p><button className="outline-button" onClick={() => void refresh()}>إعادة التحقق</button></div>}
+      <div className="donor-account-layout"><form key={creatingAccount ? 'registration' : 'login'} id="donor-auth-form" className="donor-login-card" method="dialog" onSubmit={login} aria-labelledby="donor-login-title" aria-busy={busy}>
+      <h2 id="donor-login-title">{creatingAccount ? 'إنشاء حساب' : 'تسجيل الدخول'}</h2><p className="donor-login-description">{creatingAccount ? 'أدخل بياناتك لإنشاء حساب ومتابعة تبرعاتك القادمة.' : 'لديك حساب بالفعل؟ أدخل بياناتك للمتابعة.'}</p>
+      {creatingAccount && <div className="donation-field"><label htmlFor="donor-name">الاسم</label><input id="donor-name" name="name" type="text" required autoComplete="name" placeholder="اكتب اسمك" maxLength={255} /></div>}
+      <div className="donation-field"><label htmlFor="donor-email">البريد الإلكتروني</label><input id="donor-email" name="email" type="email" dir="ltr" placeholder="name@example.com" required autoComplete="username" maxLength={255} /></div>
+      <div className="donation-field"><label htmlFor="donor-password">كلمة المرور</label><div className="donor-password-field"><input id="donor-password" name="password" type={showPassword ? 'text' : 'password'} dir="ltr" placeholder={creatingAccount ? '٨ أحرف على الأقل' : 'أدخل كلمة المرور'} required autoComplete={creatingAccount ? 'new-password' : 'current-password'} minLength={creatingAccount ? 8 : undefined} maxLength={1024} /><button type="button" className="donor-password-toggle" aria-controls="donor-password" aria-pressed={showPassword} onClick={() => setShowPassword(value => !value)}>{showPassword ? 'إخفاء' : 'إظهار'}</button></div></div>
+      {creatingAccount && <div className="donation-field"><label htmlFor="donor-password-confirmation">تأكيد كلمة المرور</label><input id="donor-password-confirmation" name="password_confirmation" type="password" dir="ltr" required autoComplete="new-password" minLength={8} maxLength={1024} placeholder="أعد كتابة كلمة المرور" /></div>}
+      {message && <p className="donor-login-error" role="alert">{message}</p>}
+      <button type="submit" className="primary-button donor-login-submit" disabled={busy}>{busy ? creatingAccount ? 'جارٍ إنشاء الحساب…' : 'جارٍ تسجيل الدخول…' : creatingAccount ? 'إنشاء حساب' : 'تسجيل الدخول'}</button>
+      <p className="donor-account-switch">{creatingAccount ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟'} <button type="button" disabled={busy} aria-controls="donor-auth-form" onClick={() => { setCreatingAccount(value => !value); setShowPassword(false); setMessage(''); }}>{creatingAccount ? 'تسجيل الدخول' : 'أنشئ حسابًا'}</button></p>
+    </form><aside className="donor-guest-card" aria-labelledby="donor-guest-title"><p className="kicker">عطاؤك يبدأ بخطوة</p><h2 id="donor-guest-title">أول زيارة لك؟</h2><p>يمكنك اختيار مشروع والتبرع مباشرة كضيف، دون الحاجة إلى إنشاء حساب.</p><Link className="primary-button" href="/projects">تصفّح المشاريع والتبرع</Link><p className="donor-guest-recovery">تبرعت كضيف من قبل؟<br /><Link className="text-button" href="/receipts/recover">استرجاع إيصال التبرع ←</Link></p></aside></div>
     </>}
-    <p><Link href="/projects">اختيار مشروع</Link> · <Link href="/receipts/recover">استرجاع إيصال الضيف</Link></p>
   </section>;
 }
 
-export function DonorDetails({ id }: { id: string }) {
-  const [donation, setDonation] = useState<Contribution | null>(null);
-  const [message, setMessage] = useState('جارٍ تحميل السجل…');
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('/api/donor/contributions/'+encodeURIComponent(id), { cache: 'no-store', credentials: 'same-origin', signal: controller.signal })
-      .then(async r => { if (!r.ok) throw Error(); return r.json(); })
-      .then(value => { if (!value.data || !Array.isArray(value.data.receipts)) throw Error(); setDonation(value.data); setMessage(''); })
-      .catch(() => { if (!controller.signal.aborted) setMessage('السجل غير متاح في هذه الجلسة. سجل الدخول بحسابك ثم حاول مرة أخرى.'); });
-    return () => controller.abort();
-  }, [id]);
-  return <section className="section"><h1>تفاصيل التبرع</h1><p role="status">{message}</p>{donation && <>
-    <p>المرجع: <bdi>{donation.reference}</bdi></p><p>{donation.project?.title ?? 'تبرع عام'}</p>
-    <p>{formatMoney(donation.amount_minor_exact, donation.currency)} — {statusLabels[donation.status] ?? donation.status}</p>
-    <p>الدفع: {donation.payment_status ? statusLabels[donation.payment_status] ?? donation.payment_status : 'لم يبدأ'}</p>
-    <p>المسترد: {formatMoney(donation.refunded_amount_minor, donation.currency)}. الإيصال الأصلي يوثق المبلغ قبل أي استرداد.</p>
-    {donation.receipts.map(r => <p key={r.uuid}>{r.number}: {r.generation_status === 'ready' ? <a href={`/api/donor/receipts/${encodeURIComponent(r.uuid)}`}>تنزيل الإيصال الأصلي</a> : 'قيد التجهيز'}</p>)}
-  </>}<Link href="/account">العودة إلى تبرعاتي</Link></section>;
-}
+export { DonorDetails } from "./donor-details";

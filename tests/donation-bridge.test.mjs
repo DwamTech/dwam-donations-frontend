@@ -4,6 +4,26 @@ import { loadTypescript } from "./load-typescript.mjs";
 const { donationBridge } = await loadTypescript("../src/lib/api/donation-bridge.ts");
 const env = { NODE_ENV: "test", SITE_ORIGIN: "http://site.test", DONATIONS_BACKEND_ORIGIN: "http://backend.test", DONATIONS_MUTATIONS_ENABLED: "true", DONATIONS_API_BRIDGE_ENABLED: "true" };
 const request = (path = "/api/donations", headers = {}, body = "{}") => new Request("http://site.test" + path, { method: "POST", headers: { Origin: env.SITE_ORIGIN, "Content-Type": "application/json", ...headers }, body });
+
+test("HTTPS receipt recovery keeps browser cookies Secure across an HTTP Laravel hop", async () => {
+  const secureEnv = { ...env, SITE_ORIGIN: "https://site.test" };
+  const browser = new Request("https://site.test/api/donation-receipts/recovery-exchanges", { method: "POST", headers: { Origin: secureEnv.SITE_ORIGIN, "Content-Type": "application/json" }, body: "{}" });
+  const response = await donationBridge(browser, { env: secureEnv, fetch: async () => {
+    const headers = new Headers({ "Content-Type": "application/json" });
+    headers.append("Set-Cookie", "donation_receipt_scope=synthetic; Path=/api/donation-receipts; HttpOnly; SameSite=Strict");
+    headers.append("Set-Cookie", "donation_receipt_1=synthetic; Path=/api/donation-receipts; HttpOnly; Secure; SameSite=Strict");
+    return new Response(JSON.stringify({ message: "neutral" }), { headers });
+  } });
+  assert.equal(response.status, 200);
+  const cookies = response.headers.getSetCookie();
+  assert.equal(cookies.length, 2);
+  for (const cookie of cookies) {
+    assert.match(cookie, /;\s*Secure(?:;|$)/i);
+    assert.equal((cookie.match(/;\s*Secure(?:;|$)/gi) ?? []).length, 1);
+    assert.match(cookie, /HttpOnly/); assert.match(cookie, /SameSite=Strict/);
+    assert.match(cookie, /Path=\/api\/donation-receipts/);
+  }
+});
 test("exact Guest bridge preserves status, idempotency and only scoped cookies", async () => {
   let calls = 0;
   const response = await donationBridge(request(undefined, { Cookie: "admin_session=secret; donation_intent_scope=synthetic; donation_cancel_1=cancel", Authorization: "Bearer forbidden", "Idempotency-Key": "11111111-1111-4111-8111-111111111111" }), { env, fetch: async (url, options) => {

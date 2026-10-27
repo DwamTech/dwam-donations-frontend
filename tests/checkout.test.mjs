@@ -8,6 +8,7 @@ import { loadTypescript } from "./load-typescript.mjs";
 const { operationSnapshot, createCheckoutOperation, checkoutDestination, uuidV4 } = await loadTypescript("../src/features/donations/data/checkout-operation.ts");
 const { checkoutConfig, disabledCheckout } = await loadTypescript("../src/features/donations/data/checkout-config.ts");
 const { CheckoutReview } = await loadTypescript("../src/features/donations/components/checkout-review.tsx");
+const { DonorSessionProvider } = await loadTypescript("../src/features/donors/session.ts");
 const { DonationReview } = await loadTypescript("../src/features/donations/components/donation-review.tsx");
 const project = { id: 1, title: "Synthetic project", reference: "PROJECT-TEST", currency: "EGP" };
 const donor = () => ({ amount: "12.34", name: "Synthetic Guest", email: "guest@example.test", phone: "+201001234567", is_public_anonymous: true });
@@ -173,7 +174,7 @@ test("unapproved checkout response never navigates after payment creation", asyn
 });
 test("disabled real review has no submission action; started review disables both edit buttons and avoids false creation claims", () => {
   const guest = { ...donor(), amount_minor: "1234" };
-  const html = renderToStaticMarkup(createElement(CheckoutReview, { project, guest, billing: billing(), onEdit() {} }));
+  const html = renderToStaticMarkup(createElement(DonorSessionProvider, { enabled: false }, createElement(CheckoutReview, { project, guest, billing: billing(), onEdit() {} })));
   assert.match(html, /غير متاحين حاليًا/); assert.equal((html.match(/<button/g) ?? []).length, 2);
   assert.doesNotMatch(html, /إرسال الطلب والمتابعة|تم التبرع بنجاح/);
   const started = renderToStaticMarkup(createElement(DonationReview, { project, guest, billing: billing(), onEdit() {}, started: true }));

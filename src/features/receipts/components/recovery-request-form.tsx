@@ -32,7 +32,7 @@ export function RecoveryRequestForm() {
   return <div className="receipt-request">
     <noscript><p>فعّل JavaScript لإدخال البيانات وإرسال الطلب بأمان. لا تُرسل بياناتك في عنوان الصفحة.</p></noscript>
     {state.status === "accepted" || state.status === "uncertain"
-      ? <p className="notice" role="status" tabIndex={-1} ref={outcome}>{state.message}</p>
+      ? <div><p className="notice" role="status" tabIndex={-1} ref={outcome}>{state.message}</p><p className="field-help">راجع كل البريد، بما فيه الرسائل غير المرغوب فيها (Spam)، قبل تكرار الطلب. رسالة الاسترجاع، إذا وصلت، تحتوي على رابط خاص صالح لمدة ١٥ دقيقة ويُستخدم مرة واحدة.</p></div>
       : <form method="dialog" noValidate onSubmit={submit} ref={form} aria-label="طلب تعليمات استرجاع الإيصال" aria-busy={state.status === "working"}>
         <fieldset disabled={!ready || state.status === "working"}><legend className="sr-only">رقم الإيصال والبريد الإلكتروني</legend>
           <div className="donation-field"><label htmlFor="recovery-receipt_number">رقم الإيصال <span aria-hidden="true">*</span></label><input id="recovery-receipt_number" value={draft.receipt_number} onChange={event => setDraft({ ...draft, receipt_number: event.target.value })} required maxLength={64} autoComplete="off" dir="ltr" aria-invalid={!!errors.receipt_number} aria-describedby={errors.receipt_number ? "recovery-receipt_number-error" : "recovery-number-help"} /><p id="recovery-number-help" className="field-help">استخدم رقم الإيصال الوارد في رسالتك، وليس رقم عملية بوابة الدفع.</p>{errors.receipt_number && <p id="recovery-receipt_number-error" className="field-error">{errors.receipt_number}</p>}</div>

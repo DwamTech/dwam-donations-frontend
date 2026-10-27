@@ -1,0 +1,37 @@
+{
+  "isolated": true,
+  "origin": "https://localhost:3047",
+  "upstream": "synthetic loopback HTTP; no Laravel/MySQL/Paymob/SMTP",
+  "checks": [
+    {
+      "width": 1440,
+      "guest_entry": true,
+      "actual_secure_session_cookie": true,
+      "refresh": true,
+      "public_cta_owned": true,
+      "owned_four_stage_transport": true,
+      "history": true,
+      "protected_receipt_pdf": true,
+      "pending_receipt": true,
+      "empty_history_and_receipts": true,
+      "mobile_desktop_navigation": true,
+      "expired_session_no_guest_fallback": true
+    },
+    {
+      "width": 390,
+      "guest_entry": true,
+      "actual_secure_session_cookie": true,
+      "refresh": true,
+      "public_cta_owned": true,
+      "owned_four_stage_transport": true,
+      "history": true,
+      "protected_receipt_pdf": true,
+      "pending_receipt": true,
+      "empty_history_and_receipts": true,
+      "mobile_desktop_navigation": true,
+      "expired_session_no_guest_fallback": true
+    }
+  ],
+  "guest_four_stage_checkout": true,
+  "neutral_return_no_mutation": true
+}

@@ -11,6 +11,17 @@ const { createRecoveryOperation } = await loadTypescript("../src/features/receip
 const { RecoveryRequestForm } = await loadTypescript("../src/features/receipts/components/recovery-request-form.tsx");
 const { RecoveryLink } = await loadTypescript("../src/features/receipts/components/recovery-link.tsx");
 const valid = () => ({ receipt_number: "SYNTHETIC-RECEIPT-1", email: "synthetic@example.test" });
+
+test("guest recovery guidance locates the receipt number in platform mail and Spam without email-only discovery", async () => {
+  const page = await readFile(new URL("../src/app/receipts/recover/page.tsx", import.meta.url), "utf8");
+  const returned = await readFile(new URL("../src/app/payment-return/page.tsx", import.meta.url), "utf8");
+  for (const source of [page, returned]) {
+    assert.match(source, /إيصال التبرع متاح/); assert.match(source, /Spam/); assert.match(source, /Paymob/);
+  }
+  const form = await readFile(new URL("../src/features/receipts/components/recovery-request-form.tsx", import.meta.url), "utf8");
+  assert.match(form, /راجع كل البريد/);
+  assert.equal(validateRecoveryRequest({ receipt_number: "", email: "synthetic@example.test" }).value, null);
+});
 const token_id = "12345678-1234-4123-8123-123456789abc", secret = "S".repeat(43);
 const fragment = `#token_id=${token_id}&secret=${secret}`;
 test("request validation requires the exact receipt-number/email fields with verified length bounds", () => {

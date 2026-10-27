@@ -143,7 +143,7 @@ export function createCheckoutOperation(snapshot: Snapshot, dependencies: {
       // Payment consumes guest capability; checkout can have reached the provider. Both need review on ambiguity.
       const safeRetry = error instanceof RequestFailure && error.wellFormed && (error.status === 429 || (stage === "reserve" && error.status === 409) || (stage === "payment" && error.status === 503));
       update({ status: safeRetry ? "recoverable" : "attention", stage,
-        message: error instanceof RequestFailure && error.wellFormed ? stage === "reserve" && error.status === 409 ? "لم يُؤكّد حجز المبلغ؛ قد لا تكفي السعة أو قد لا يسمح وضع المشروع بالمتابعة. يمكنك إعادة محاولة الحجز للطلب نفسه لاحقًا دون إنشاء طلب جديد." : messages[error.status] ?? "تعذّرت المتابعة. تحتاج حالة الطلب إلى مراجعة قبل أي محاولة جديدة." : "لم نتمكن من تأكيد نتيجة الخطوة. لا تنشئ تبرعًا آخر؛ تحتاج الحالة إلى مراجعة وقد يبقى الحجز حتى انتهاء مهلته." });
+        message: error instanceof RequestFailure && error.status === 401 && snapshot.authenticated ? "انتهت جلسة حسابك. سجّل الدخول ثم تحقق من تبرعاتك قبل بدء طلب آخر. لم نتحول إلى التبرع كضيف." : error instanceof RequestFailure && error.wellFormed ? stage === "reserve" && error.status === 409 ? "لم يُؤكّد حجز المبلغ؛ قد لا تكفي السعة أو قد لا يسمح وضع المشروع بالمتابعة. يمكنك إعادة محاولة الحجز للطلب نفسه لاحقًا دون إنشاء طلب جديد." : messages[error.status] ?? "تعذّرت المتابعة. تحتاج حالة الطلب إلى مراجعة قبل أي محاولة جديدة." : "لم نتمكن من تأكيد نتيجة الخطوة. لا تنشئ تبرعًا آخر؛ تحتاج الحالة إلى مراجعة وقد يبقى الحجز حتى انتهاء مهلته." });
     } finally { busy = false; }
   }
   return Object.freeze({ run, getState: () => state, hasStarted: () => started });

@@ -11,6 +11,13 @@ test('donor login hides Sanctum credential in an independent HttpOnly Secure coo
  }});
  assert.equal(r.status,200);assert.equal((await r.json()).token,undefined);assert.match(r.headers.get('Set-Cookie'),/donor_session=1%7Csynthetic_token; Path=\/api\/donor; HttpOnly; SameSite=Strict; Max-Age=7200; Secure/);
 });
+test('donor registration creates the same private session without forwarding caller authority', async()=>{
+ const r=await donorBridge(req('/api/donor/registration','POST',{Cookie:'admin_session=foreign',Authorization:'Bearer foreign'}),{env,fetch:async(url,o)=>{
+   assert.equal(url,'https://backend.test/api/donor/registration');assert.equal(o.headers.get('Cookie'),null);assert.equal(o.headers.get('Authorization'),null);assert.equal(o.headers.get('Origin'),null);
+   return Response.json({data:{id:2,name:'New donor',email:'new@example.test'},token:'2|synthetic_token'},{status:201});
+ }});
+ assert.equal(r.status,201);assert.equal((await r.json()).token,undefined);assert.match(r.headers.get('Set-Cookie'),/HttpOnly; SameSite=Strict; Max-Age=7200; Secure/);
+});
 test('donor bridge forwards only its own credential to exact owned routes and revokes cookie on logout',async()=>{
  const r=await donorBridge(req('/api/donor/logout','POST',{Cookie:'donor_session=1%7Csynthetic_token; admin_session=foreign',Authorization:'Bearer foreign'}),{env,fetch:async(url,o)=>{
    assert.equal(url,'https://backend.test/api/donor/logout');assert.equal(o.headers.get('Authorization'),'Bearer 1|synthetic_token');assert.equal(o.headers.get('Cookie'),null);return Response.json({message:'Logged out.'});

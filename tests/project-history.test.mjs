@@ -37,6 +37,6 @@ test('historical filters and pagination stay server-side and survive category/co
 });
 test('donation entry is guarded before the form and sitemap explicitly discovers public history', async () => {
   const entry = await readFile(new URL('../src/app/donate/[project]/page.tsx', import.meta.url), 'utf8');
-  assert(entry.indexOf('if (!project.accepts_donations)') < entry.indexOf('<GuestDonationForm'));
+  assert(entry.indexOf('if (!project.accepts_donations)') < entry.indexOf('<DonationCheckoutEntry'));
   assert.match(await readFile(new URL('../src/app/sitemap.ts', import.meta.url), 'utf8'), /state: "all"/);
 });

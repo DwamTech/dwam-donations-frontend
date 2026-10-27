@@ -2,6 +2,7 @@ import type { DonationProject } from "../types/project";
 import Link from "next/link";
 import { publicProjectLabels, projectDate } from "../data/presentation";
 import { formatMoney } from "@/lib/formatters/money";
+import { DonationLink } from "@/features/donors/donation-link";
 
 export function FundingSummary({ project }: { project: DonationProject }) {
   const start = projectDate(project.acceptance_starts_at);
@@ -14,7 +15,7 @@ export function FundingSummary({ project }: { project: DonationProject }) {
     <dl className="capacity"><div><dt>السعة المتبقية بعد الحجوزات</dt><dd><bdi>{formatMoney(project.remaining_amount_minor, project.currency)}</bdi></dd></div></dl>
     <p className="detail-note">هذه السعة كما يوردها النظام بعد احتساب الحجوزات. قد تتغير، ولا تضمن قبول تبرع جديد. نسبة التقدّم تعتمد على صافي المحصّل فقط.</p>
     {(start || end) && <div className="project-dates"><h3>فترة قبول التبرعات المسجّلة</h3><dl>{start && <div><dt>تبدأ</dt><dd><time dateTime={project.acceptance_starts_at!}>{start}</time></dd></div>}{end && <div><dt>تنتهي</dt><dd><time dateTime={project.acceptance_ends_at!}>{end}</time></dd></div>}</dl><p className="detail-note">التوقيت: القاهرة. نشر المشروع وحده لا يعني أن فترة قبول التبرعات مفتوحة الآن.</p></div>}
-    {project.accepts_donations ? <div className="contribution-note"><h3>حضّر مساهمتك</h3><p>راجع المبلغ والبيانات قبل المتابعة. يتحقق النظام من أهلية التبرع والسعة المتاحة عند الإرسال.</p><Link className="primary-button contribution-link" href={`/donate/${project.id}`}>إدخال المبلغ والبيانات ←</Link></div>
+    {project.accepts_donations ? <div className="contribution-note"><h3>حضّر مساهمتك</h3><p>راجع المبلغ والبيانات قبل المتابعة. يتحقق النظام من أهلية التبرع والسعة المتاحة عند الإرسال.</p><DonationLink className="primary-button contribution-link" projectId={project.id}>تبرع الآن ←</DonationLink></div>
       : <div className="contribution-note"><h3>{publicProjectLabels[project.public_state]}</h3><p>يبقى سجل الحملة ومعلومات تمويلها متاحين للاطلاع. اكتمال التمويل لا يعني اكتمال تنفيذ المشروع.</p><Link className="outline-link" href="/projects">استكشف المشاريع النشطة ←</Link></div>}
   </aside>;
 }
